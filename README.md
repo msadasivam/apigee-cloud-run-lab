@@ -18,19 +18,22 @@ This sample shows how to deploy a Cloud Run service and expose it as an API mana
 
 3. Deploying Cloud Run Service
 
+   Note: During deploy step below, use the following for the additional prompts. 
+   * Enable run.googleapis.com
+   * Pick any cloud region (Apigee trial is in us-central)
+   * Allow unauthenticated session: N
+
    ```sh
     cd nodejs-docs-samples/run/helloworld/
     npm install
 
-    export GOOGLE_CLOUD_PROJECT=<your-gcp-project>
+    export GOOGLE_CLOUD_PROJECT=<your-gcp-project>   #if not already set
 
     gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/helloworld
     gcloud run deploy helloworld \
-      # Needed for Manual Logging sample.
       --set-env-vars GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT} \
       --image gcr.io/${GOOGLE_CLOUD_PROJECT}/helloworld
    ```
-   Pick any cloud region, auth enabled
 
 4. Test Cloud Run Service
 
@@ -55,24 +58,26 @@ The following repo contains a Shared Flow that can fetch GCP OAuth access or ide
     git clone https://github.com/apigee/devrel.git
     ```
 
-2. Jump to IAM in cloud console and download "Compute Engine default service account" JSON key for the service account. See GCP
+2. In Cloud console, jump to [IAM -> Service Accounts](https://console.cloud.google.com/iam-admin/serviceaccounts), pick "Compute Engine default service account", create and download JSON private key. See GCP
    [docs](https://cloud.google.com/iam/docs/creating-managing-service-account-keys). 
    
-   *Note*: Compute Engine default service account chosen for simplicity of steps in this labs. In a prod setup a dedicated service account with right Apigee role will be used.
+   *Note*: "Compute Engine default service account" is chosen for simplicity of steps in this labs. In a prod setup a dedicated service account with right Apigee role will be used.
 
 3. Deploy the Shared Flow
 
-    Provide path to service account to initialize the kvm value. This script will
+    A [SharedFlow](https://cloud.google.com/apigee/docs/api-platform/fundamentals/shared-flows) that acquires GCP token to invoke the GCP Run endpoint will be deployed. GCP Service Account credentials are held securely in an encrypted [KVM](https://cloud.google.com/apigee/docs/api-platform/cache/key-value-maps) and tokens are cached within Apigee till they expire. 
+    This script will
     * Create the GCP Service Account Token Shared Flow
     * Initialize an environement Cache Resource
     * Initialize a KVM
     * Add a service account key to that kvm
 
+    Note: In the deploy command below, if you get the error ```[FATAL] please install xmllint command```.  Please run ```sudo apt install libxml2-utils``` for Linux based environments including Cloudshell.
 
    ```sh
     # set your Apigee org variables:
     export APIGEE_X_ORG=<your org>
-    export APIGEE_X_ENV=<your environment>
+    export APIGEE_X_ENV=eval
     export APIGEE_X_HOSTNAME=<hostname of your environment>
     
     cd devrel/references/gcp-sa-auth-shared-flow/
