@@ -1,12 +1,15 @@
 # Apigee Cloud Run Hello World
 
- * [Setup Cloud Run service](#setup-cloud-run-service)
- * [Setup Apigee](#setup-apigee)
+This lab shows how to deploy a protected Cloud Run service and expose it as an API managed by Apigee. This lab can be tried by itself or as a continuation of API Jam labs.
+
+ * [Setup Cloud Run service](#setup-cloud-run-service) (backend)
+ * [Setup Apigee](#setup-apigee) (shared flow + proxy)
  * [Test API](#test-api)
 
-This sample shows how to deploy a Cloud Run service and expose it as an API managed by Apigee.
 
 ## Setup Cloud Run service 
+
+A basic hello world sample Cloud Run Service is used as the backend. Swap it for any REST based Cloud Run service.
 
 1. [Set up for Cloud Run development](https://cloud.google.com/run/docs/setup)
 
@@ -50,7 +53,7 @@ This sample shows how to deploy a Cloud Run service and expose it as an API mana
 
 ## Setup Apigee
 
-The following repo contains a Shared Flow that can fetch GCP OAuth access or identity token using a service account. To deploy the SharedFlow and setup service account in Apigee follow the below steps.
+Apigee authenticates to Cloud Run using GCP OAuth token based on a service account. A SharedFlow to fetch GCP OAuth token is first deployed. An API proxy that frontends the Cloud Run service is then updated to leverage the SharedFlow.
 
 1. Clone apigee/devrel repository:
 
@@ -154,7 +157,7 @@ The following repo contains a Shared Flow that can fetch GCP OAuth access or ide
 1. Save and Deploy API to the available environment.
 
 ## Test API
-Enable "Debug" and invoke the API. You will find the identity token created and injected into the request. 
+Enable "Debug" mode in the API proxy and invoke the API from a terminal using the command below. You will find the identity token created and injected into the request. 
 
 ```sh
     curl -k -i https://$DOMAIN/hello-world-run \
