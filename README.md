@@ -65,7 +65,7 @@ The following repo contains a Shared Flow that can fetch GCP OAuth access or ide
 
 3. Deploy the Shared Flow
 
-    A [SharedFlow](https://cloud.google.com/apigee/docs/api-platform/fundamentals/shared-flows) that acquires GCP token to invoke the GCP Run endpoint will be deployed. GCP Service Account credentials are held securely in an encrypted [KVM](https://cloud.google.com/apigee/docs/api-platform/cache/key-value-maps) and tokens are cached within Apigee till they expire. 
+    A [SharedFlow](https://cloud.google.com/apigee/docs/api-platform/fundamentals/shared-flows) that acquires GCP OAuth tokens to invoke the GCP Run endpoint will be deployed. GCP Service Account credentials are held securely in an encrypted [KVM](https://cloud.google.com/apigee/docs/api-platform/cache/key-value-maps) and tokens are cached within Apigee till they expire. 
     This script will
     * Create the GCP Service Account Token Shared Flow
     * Initialize an environement Cache Resource
@@ -85,6 +85,8 @@ The following repo contains a Shared Flow that can fetch GCP OAuth access or ide
    ```
 
 4. Shared Flow invocation from within an API proxy
+
+    If you are following the API Jam labs, you can leverage the the "Hipster-Products-API" built in Lab 1. If you are not in Qwiklabs environment or if you don't have the proxy already with you, download [this bundle](https://storage.googleapis.com/apigeexlabs/apijam-lab2/Hipster-Products-API.zip) and import it (API Proxy -> Create NEW -> Upload proxy bundle).
 
     1. Add the following KVMOperations policy to pick the right service account key file from KVM. Attach the policy to "default" Target Endpoint in the PreFlow phase.
 
